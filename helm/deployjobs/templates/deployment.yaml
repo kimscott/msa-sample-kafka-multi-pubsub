@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+  labels:
+    app: dowork-deploy
+spec:
+  replicas: {{ .Values.consumer.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: dowork-deploy
+  template:
+    metadata:
+      labels:
+        app: dowork-deploy
+    spec:
+      containers:
+      - name: dowork-pod
+        image: sanaloveyou/jobconsume:v4
+---
+{{$replicas := .Values.producer.replicas }}
+{{range $i, $e := until (int .Values.producer.replicas | default 1)}}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: producer-{{$i}}
+spec:
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: dowork
+            image: sanaloveyou/jobproduce:v4
+            env:
+            - name: PRODUCER_REPLICAS
+              value: "{{$replicas}}"
+            - name: PRODUCER_ID
+              value: "{{$i}}"
+          restartPolicy: OnFailure
+          
+---
+{{end}}

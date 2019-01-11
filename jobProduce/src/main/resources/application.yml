@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+topic:
+  cloudInstance : cloudInstance
+
+producerReplicas : ${PRODUCER_REPLICAS:#{1} }
+producerId : ${PRODUCER_ID:#{0}}
+
+---
+spring:
+  profiles: default
+  kafka:
+    bootstrap-servers: localhost:9092
+
+server:
+  port: 8085
+---
+spring:
+  profiles: docker
+  kafka:
+    bootstrap-servers: my-kafka.kafka.svc.cluster.local:9092
+#    bootstrap-servers: my-kafka:9092

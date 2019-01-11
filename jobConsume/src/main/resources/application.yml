@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+
+topic:
+  cloudInstance : cloudInstance
+
+---
+spring:
+  profiles: default
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      enable-auto-commit: true
+
+server:
+  port: 8084
+---
+spring:
+  profiles: docker
+  kafka:
+    bootstrap-servers: my-kafka.kafka.svc.cluster.local:9092
+#    bootstrap-servers: my-kafka:9092
+
