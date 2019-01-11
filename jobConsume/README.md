@@ -51,17 +51,3 @@ kubectl -n kafka exec my-kafka-0 -- /usr/bin/kafka-topics --zookeeper my-kafka-z
 -- 토픽 삭제
 kubectl -n kafka exec my-kafka-0 -- /usr/bin/kafka-topics --zookeeper my-kafka-zookeeper:2181 --topic cloudInstance --delete
 
-#### helm 을 이용한 한방 배포
-cd ../helm/deployjobs/
-helm dependency update
-helm init
-
--- install  
-helm install --dry-run --debug --name kafkapubsub .
-helm install --name kafkapubsub .
-
--- 삭제  
-helm delete kafkapubsub --purge
-
--- 값을 업데이트  
-helm install --name kafkapubsub --set consumer.replicas=2,producer.replicas=2 .
