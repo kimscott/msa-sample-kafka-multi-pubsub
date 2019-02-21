@@ -1,5 +1,6 @@
 package com.example.template;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +67,44 @@ public class KafkaSender {
                 }
             }
         }
+    }
 
+    public void sendByClass(){
 
+        ArrayList<String> statusList = new ArrayList<String>();
+        statusList.add("Ready");
+        statusList.add("Pending");
+        statusList.add("Running");
+        statusList.add("Completed");
+        statusList.add("Crash");
+        statusList.add("Deleted");
+
+        // 변수값은 string 으로 받는것이 여러 오류를 줄여주니 int 형으로 변환을 시켜준다
+        int producerReplicasVal = 1;
+        int producerIdVal = 0;
+        try{
+            producerReplicasVal = Integer.parseInt(producerReplicas);
+            producerIdVal = Integer.parseInt(producerId);
+        }catch (Exception ex){
+
+        }
+
+        Random random = new Random();
+        for(int i=0; i < 100; i++){
+            if( (i % producerReplicasVal) == producerIdVal) {
+
+                String accountId = "accountId_" + i;
+                String status = statusList.get(random.nextInt(6));
+
+                CloudInstance cloudInstanceObj = new CloudInstance();
+                cloudInstanceObj.setAccountId(accountId);
+                cloudInstanceObj.setRegion("ap-northeast-2");
+                cloudInstanceObj.setStatus(status);
+                cloudInstanceObj.setDummy("dum");
+
+                System.out.println("Message: " + cloudInstanceObj.toString() + " sent to topic: " + cloudInstance);
+                kafkaTemplate.send(new ProducerRecord<String, CloudInstance>(cloudInstance, accountId, cloudInstanceObj));
+            }
+        }
     }
 }

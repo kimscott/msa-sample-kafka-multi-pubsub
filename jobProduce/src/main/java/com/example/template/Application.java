@@ -17,8 +17,13 @@ public class Application {
     public static void main(String[] args) {
         applicationContext = SpringApplication.run(Application.class, args);
 
-        KafkaSender kafkaSender = Application.applicationContext.getBean(KafkaSender.class);
-        kafkaSender.send();
+//        KafkaSender kafkaSender = Application.applicationContext.getBean(KafkaSender.class);
+//        kafkaSender.send();
+//        kafkaSender.sendByClass();
+
+
+        KafkaSenderTwo kafkaSender2 = Application.applicationContext.getBean(KafkaSenderTwo.class);
+        kafkaSender2.send();
 
         SpringApplication.exit(applicationContext);
     }

@@ -51,3 +51,7 @@ kubectl -n kafka exec my-kafka-0 -- /usr/bin/kafka-topics --zookeeper my-kafka-z
 -- 토픽 삭제
 kubectl -n kafka exec my-kafka-0 -- /usr/bin/kafka-topics --zookeeper my-kafka-zookeeper:2181 --topic cloudInstance --delete
 
+#### 카프카 사용시 주의사항
+groupId 와 topic 이 같은 메서드를 두개 @KafkaListener 로 등록하여 놓는다면,  
+둘중 하나만 작동한다.
+
